@@ -254,7 +254,7 @@ export const TESTIMONIALS = [
         image: `${import.meta.env.BASE_URL}image/goryla-wojtek-mrowka.jpeg`,
     },
     {
-        content: "I would also like to thank you for the opportunity to work with you. You have tremendous knowledge, which I deeply admire... The way you handle everything and automate it is just amazing! I really appreciate that you had the patience and explained everything so we could understand as much as possible ourselves and develop these systems independently, which got me a bit hooked on automations :D I hope we will have the opportunity to work together again in the future!",
+        content: "I would like to thank you for the opportunity to work with you. You have tremendous knowledge, which I deeply admire. The way you handle everything and automate it is just amazing! I really appreciate that you had the patience and explained everything so we could understand as much as possible ourselves and develop these systems independently, which got me a bit hooked on automations. I hope we will have the opportunity to work together again in the future!",
         author: "Krystian Czarnecki",
         role: "FP&A Analyst",
         image: `${import.meta.env.BASE_URL}image/krystian-czarnecki-photo.jpeg`,
