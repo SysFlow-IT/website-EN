@@ -1,17 +1,71 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useContent } from '../../hooks/useContent';
 import { useRevealOnIntersect } from '@hooks/useRevealOnIntersect';
 import styles from './Testimonials.module.css';
 import gsap from 'gsap';
 
+const AUTO_ROTATE_INTERVAL = 8000;
+
 export const Testimonials: React.FC = () => {
     const { content } = useContent();
     const { ref, isVisible } = useRevealOnIntersect();
     const cardRef = useRef<HTMLDivElement>(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isAnimating, setIsAnimating] = useState(false);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // Simple carousel logic could be added here if we have multiple testimonials
-    // For now, we display the first one statically but styled as a featured card
-    const testimonial = content.TESTIMONIALS[0];
+    const testimonials = content.TESTIMONIALS;
+    const testimonial = testimonials[currentIndex];
+
+    const animateTransition = useCallback((newIndex: number) => {
+        if (isAnimating || !cardRef.current) return;
+
+        setIsAnimating(true);
+
+        gsap.to(cardRef.current, {
+            opacity: 0,
+            y: -20,
+            duration: 0.3,
+            ease: 'power2.in',
+            onComplete: () => {
+                setCurrentIndex(newIndex);
+                gsap.fromTo(
+                    cardRef.current,
+                    { opacity: 0, y: 20 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.3,
+                        ease: 'power2.out',
+                        onComplete: () => setIsAnimating(false)
+                    }
+                );
+            }
+        });
+    }, [isAnimating]);
+
+    const goToNext = useCallback(() => {
+        const newIndex = (currentIndex + 1) % testimonials.length;
+        animateTransition(newIndex);
+    }, [currentIndex, testimonials.length, animateTransition]);
+
+    const goToPrev = useCallback(() => {
+        const newIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+        animateTransition(newIndex);
+    }, [currentIndex, testimonials.length, animateTransition]);
+
+    const goToIndex = useCallback((index: number) => {
+        if (index !== currentIndex) {
+            animateTransition(index);
+        }
+    }, [currentIndex, animateTransition]);
+
+    const resetAutoRotate = useCallback(() => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+        }
+        intervalRef.current = setInterval(goToNext, AUTO_ROTATE_INTERVAL);
+    }, [goToNext]);
 
     useEffect(() => {
         if (isVisible && cardRef.current) {
@@ -22,6 +76,32 @@ export const Testimonials: React.FC = () => {
             );
         }
     }, [isVisible]);
+
+    useEffect(() => {
+        if (testimonials.length > 1) {
+            intervalRef.current = setInterval(goToNext, AUTO_ROTATE_INTERVAL);
+        }
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, [goToNext, testimonials.length]);
+
+    const handleNavClick = (index: number) => {
+        goToIndex(index);
+        resetAutoRotate();
+    };
+
+    const handlePrevClick = () => {
+        goToPrev();
+        resetAutoRotate();
+    };
+
+    const handleNextClick = () => {
+        goToNext();
+        resetAutoRotate();
+    };
 
     return (
         <section className={`${styles.section} section`} ref={ref}>
@@ -43,10 +123,45 @@ export const Testimonials: React.FC = () => {
                         <div className={styles.author}>
                             <span className={styles.name}>{testimonial.author}</span>
                             <span className={styles.role}>
-                                {testimonial.role}, {testimonial.company}
+                                {testimonial.role}{testimonial.company ? `, ${testimonial.company}` : ''}
                             </span>
                         </div>
                     </div>
+
+                    {testimonials.length > 1 && (
+                        <div className={styles.navigation}>
+                            <button
+                                className={styles.navButton}
+                                onClick={handlePrevClick}
+                                aria-label="Previous testimonial"
+                            >
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                            </button>
+
+                            <div className={styles.dots}>
+                                {testimonials.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        className={`${styles.dot} ${index === currentIndex ? styles.dotActive : ''}`}
+                                        onClick={() => handleNavClick(index)}
+                                        aria-label={`Go to testimonial ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+
+                            <button
+                                className={styles.navButton}
+                                onClick={handleNextClick}
+                                aria-label="Next testimonial"
+                            >
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

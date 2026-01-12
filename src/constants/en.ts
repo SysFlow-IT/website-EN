@@ -247,7 +247,7 @@ export const PROBLEMS_WDROZENIA = [
 
 export const TESTIMONIALS = [
     {
-        content: "I highly recommend working with GoFlow. Work with the team proceeds in a very good, partnership atmosphere, while maintaining a high level of professionalism. Major value lies in their approach focused on real organizational needs, focusing on organizing and simplifying processes rather than imposing a single 'ready-made' solution. Thanks to implemented automations and AI-based solutions, we managed to improve many key operational, financial, and business areas at Cookie3.",
+        content: "I highly recommend working with SysFlow. Work with the team proceeds in a very good, partnership atmosphere, while maintaining a high level of professionalism. Major value lies in their approach focused on real organizational needs, focusing on organizing and simplifying processes rather than imposing a single 'ready-made' solution. Thanks to implemented automations and AI-based solutions, we managed to improve many key operational, financial, and business areas at Cookie3.",
         author: "Wojtek Mrówka",
         role: "Chief Operating Officer",
         company: "Cookie3",

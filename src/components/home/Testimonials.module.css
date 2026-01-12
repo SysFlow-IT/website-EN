@@ -73,6 +73,58 @@
     text-transform: uppercase;
 }
 
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.navButton {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.2s ease;
+}
+
+.navButton:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dots {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.dot:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.dotActive {
+    background: rgba(255, 255, 255, 0.8);
+}
+
 @media (max-width: 768px) {
     .card {
         padding: 2rem;
@@ -88,5 +140,14 @@
 
     .role {
         font-size: 0.8rem;
+    }
+
+    .navigation {
+        gap: 1rem;
+    }
+
+    .navButton {
+        width: 38px;
+        height: 38px;
     }
 }
